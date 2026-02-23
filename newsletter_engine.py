@@ -400,14 +400,16 @@ class NewsletterEngine:
         if not sub:
             return False
         now = _now()
+        updated = False
         with self._connect() as conn:
             result = conn.execute("""
                 UPDATE send_records SET opened=1, opened_at=?
                 WHERE newsletter_id=? AND subscriber_id=? AND opened=0
             """, (now, newsletter_id, sub.id))
-            if result.rowcount > 0:
-                self._update_open_rate(sub.id)
-        return result.rowcount > 0
+            updated = result.rowcount > 0
+        if updated:
+            self._update_open_rate(sub.id)
+        return updated
 
     def record_click(self, newsletter_id: str, email: str, link: str) -> bool:
         """Record a link click event."""
