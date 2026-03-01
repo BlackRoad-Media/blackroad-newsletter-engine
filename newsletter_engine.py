@@ -3,6 +3,7 @@
 BlackRoad Newsletter Engine - Email newsletter creation, scheduling, and analytics
 """
 
+import os
 import sqlite3
 import uuid
 import json
@@ -12,6 +13,15 @@ from dataclasses import dataclass, field, asdict
 from typing import Optional, List, Dict, Any
 from datetime import datetime, timezone, timedelta
 from enum import Enum
+
+try:
+    import markdown as _markdown_lib
+    import jinja2 as _jinja2_lib
+    _HTML_RENDER_AVAILABLE = True
+except ImportError:
+    _HTML_RENDER_AVAILABLE = False
+
+_TEMPLATES_DIR = os.path.join(os.path.dirname(__file__), "templates")
 
 
 class SubscriberStatus(str, Enum):
@@ -568,6 +578,63 @@ class NewsletterEngine:
             }
             for s in subs
         ]
+
+    # ── HTML Rendering ─────────────────────────────────────────────────────
+
+    def render_html(self, newsletter_id: str,
+                    template_name: str = "newsletter_email.html",
+                    extra_context: Optional[Dict[str, Any]] = None,
+                    templates_dir: Optional[str] = None) -> str:
+        """Render a newsletter as HTML using a Jinja2 template.
+
+        Args:
+            newsletter_id: ID of the newsletter to render.
+            template_name: Filename inside the templates/ directory.
+            extra_context: Additional variables to pass to the template.
+            templates_dir: Override the default templates/ directory path.
+
+        Returns:
+            Rendered HTML string.
+
+        Raises:
+            ImportError: If Jinja2 or Markdown are not installed.
+            ValueError: If the newsletter is not found.
+        """
+        if not _HTML_RENDER_AVAILABLE:
+            raise ImportError(
+                "Jinja2 and Markdown are required for render_html(). "
+                "Run: pip install Jinja2 Markdown"
+            )
+
+        nl = self.get_newsletter(newsletter_id)
+        if not nl:
+            raise ValueError(f"Newsletter {newsletter_id} not found")
+
+        tmpl_dir = templates_dir or _TEMPLATES_DIR
+        env = _jinja2_lib.Environment(
+            loader=_jinja2_lib.FileSystemLoader(tmpl_dir),
+            autoescape=_jinja2_lib.select_autoescape(["html", "xml"]),
+        )
+        template = env.get_template(template_name)
+
+        body_html = _markdown_lib.markdown(
+            nl.body_md,
+            extensions=["extra", "nl2br"],
+        )
+
+        context: Dict[str, Any] = {
+            "subject": nl.subject,
+            "preview_text": nl.preview_text,
+            "body_html": body_html,
+            "word_count": nl.word_count,
+            "read_time": nl.estimated_read_time_min,
+            "sent_at": nl.sent_at,
+            "newsletter_id": nl.id,
+        }
+        if extra_context:
+            context.update(extra_context)
+
+        return template.render(**context)
 
 
 def create_engine(db_path: str = "newsletter.db") -> NewsletterEngine:

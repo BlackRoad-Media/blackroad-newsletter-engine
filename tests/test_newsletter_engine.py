@@ -1,3 +1,4 @@
+import os
 import pytest
 from newsletter_engine import (
     NewsletterEngine, Subscriber, Newsletter, SendRecord,
@@ -153,3 +154,44 @@ class TestSendingAndAnalytics:
         assert e is not None
         e.subscribe("test@example.com", "Test")
         assert e.subscriber_count() == 1
+
+
+class TestRenderHtml:
+    """Tests for the HTML rendering method using Jinja2 templates."""
+
+    TEMPLATES_DIR = os.path.join(
+        os.path.dirname(__file__), "..", "templates"
+    )
+
+    def test_render_html_basic(self, engine):
+        nl = engine.create_newsletter(
+            "BlackRoad Weekly",
+            "# Hello\n\nWelcome to BlackRoad.",
+            "Welcome to BlackRoad.",
+        )
+        html = engine.render_html(nl.id, templates_dir=self.TEMPLATES_DIR)
+        assert "<html" in html.lower()
+        assert "BlackRoad Weekly" in html
+
+    def test_render_html_contains_body(self, engine):
+        nl = engine.create_newsletter(
+            "Test Issue",
+            "## Section\n\nSome **bold** content.",
+            "Some bold content.",
+        )
+        html = engine.render_html(nl.id, templates_dir=self.TEMPLATES_DIR)
+        assert "<strong>bold</strong>" in html
+
+    def test_render_html_extra_context(self, engine):
+        nl = engine.create_newsletter("Context Test", "Body.", "Preview.")
+        html = engine.render_html(
+            nl.id,
+            templates_dir=self.TEMPLATES_DIR,
+            extra_context={"issue_label": "Issue #42"},
+        )
+        assert "Issue #42" in html
+
+    def test_render_html_not_found(self, engine):
+        with pytest.raises(ValueError, match="not found"):
+            engine.render_html("nonexistent-id", templates_dir=self.TEMPLATES_DIR)
+

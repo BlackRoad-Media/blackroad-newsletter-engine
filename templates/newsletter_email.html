@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="x-apple-disable-message-reformatting">
+  <!--[if !mso]><!-->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!--<![endif]-->
+  <title>{{ subject | default("BlackRoad Newsletter") }}</title>
+  <style>
+    /* Reset */
+    body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    img { -ms-interpolation-mode: bicubic; border: 0; outline: none; text-decoration: none; }
+
+    body {
+      margin: 0 !important;
+      padding: 0 !important;
+      background-color: #000000;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    .wrapper {
+      width: 100%;
+      background-color: #000000;
+      padding: 24px 0;
+    }
+
+    .email-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #000000;
+      border: 1px solid #ffffff;
+    }
+
+    /* Header */
+    .email-header {
+      background-color: #000000;
+      padding: 20px 32px;
+      border-bottom: 1px solid #ffffff;
+    }
+
+    .email-header .logo {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+    }
+
+    /* Hero */
+    .email-hero {
+      background-color: #000000;
+      padding: 32px 32px 24px;
+      border-bottom: 1px solid #333333;
+    }
+
+    .email-hero .issue-label {
+      font-size: 0.6rem;
+      color: #555555;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .email-hero h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.2;
+      margin: 0 0 12px 0;
+    }
+
+    .email-hero .preview-text {
+      font-size: 0.7rem;
+      color: #666666;
+      line-height: 1.8;
+      margin: 0;
+    }
+
+    /* Body */
+    .email-body {
+      padding: 32px;
+      font-size: 0.78rem;
+      color: #cccccc;
+      line-height: 1.9;
+    }
+
+    .email-body h2 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 24px 0 10px 0;
+      border-bottom: 1px solid #222222;
+      padding-bottom: 6px;
+    }
+
+    .email-body h3 {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 20px 0 8px 0;
+    }
+
+    .email-body p {
+      margin: 0 0 14px 0;
+      color: #cccccc;
+    }
+
+    .email-body a {
+      color: #ffffff;
+      text-decoration: underline;
+    }
+
+    .email-body a:hover { color: #aaaaaa; }
+
+    .email-body ul, .email-body ol {
+      margin: 0 0 14px 0;
+      padding-left: 20px;
+    }
+
+    .email-body li { margin-bottom: 6px; }
+
+    .email-body blockquote {
+      border-left: 2px solid #444444;
+      margin: 16px 0;
+      padding: 8px 16px;
+      color: #888888;
+      font-style: italic;
+    }
+
+    .email-body code {
+      background: #111111;
+      border: 1px solid #333333;
+      padding: 2px 6px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.75rem;
+      color: #cccccc;
+    }
+
+    .email-body pre {
+      background: #111111;
+      border: 1px solid #333333;
+      padding: 16px;
+      overflow-x: auto;
+      margin: 16px 0;
+    }
+
+    .email-body pre code {
+      border: none;
+      padding: 0;
+    }
+
+    /* CTA Button */
+    .cta-button {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #ffffff;
+      color: #000000 !important;
+      text-decoration: none !important;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin: 16px 0;
+    }
+
+    /* Divider */
+    .divider {
+      border: none;
+      border-top: 1px solid #222222;
+      margin: 0;
+    }
+
+    /* Meta bar */
+    .email-meta {
+      padding: 14px 32px;
+      border-top: 1px solid #222222;
+      font-size: 0.58rem;
+      color: #444444;
+    }
+
+    .email-meta table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .email-meta td {
+      padding: 0;
+      vertical-align: middle;
+    }
+
+    .email-meta td:last-child {
+      text-align: right;
+    }
+
+    /* Footer */
+    .email-footer {
+      padding: 20px 32px;
+      border-top: 1px solid #333333;
+      font-size: 0.58rem;
+      color: #444444;
+      text-align: center;
+      line-height: 1.8;
+    }
+
+    .email-footer a {
+      color: #666666;
+      text-decoration: underline;
+    }
+
+    @media screen and (max-width: 480px) {
+      .email-container { width: 100% !important; }
+      .email-header,
+      .email-hero,
+      .email-body,
+      .email-meta,
+      .email-footer { padding-left: 16px !important; padding-right: 16px !important; }
+      .email-hero h1 { font-size: 1.1rem !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <table class="email-container" role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="600">
+
+      {# ── Header ────────────────────────────────────────────────────────── #}
+      <tr>
+        <td class="email-header">
+          <a href="{{ site_url | default('https://blackroad.io') }}" class="logo">BlackRoad</a>
+        </td>
+      </tr>
+
+      {# ── Hero ──────────────────────────────────────────────────────────── #}
+      <tr>
+        <td class="email-hero">
+          {% if issue_label %}<div class="issue-label">{{ issue_label }}</div>{% endif %}
+          <h1>{{ subject | default("BlackRoad Newsletter") }}</h1>
+          <p class="preview-text">{{ preview_text | default("") }}</p>
+        </td>
+      </tr>
+
+      {# ── Body ──────────────────────────────────────────────────────────── #}
+      <tr>
+        <td class="email-body">
+          {{ body_html | safe }}
+        </td>
+      </tr>
+
+      {# ── Meta bar ──────────────────────────────────────────────────────── #}
+      {% if word_count is defined or read_time is defined %}
+      <tr>
+        <td class="email-meta">
+          <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+            <tr>
+              <td>{% if word_count is defined %}<span>{{ word_count }} words</span>{% endif %}
+              {% if read_time is defined %}&nbsp;·&nbsp;<span>~{{ read_time }} min read</span>{% endif %}</td>
+              <td>{% if sent_at is defined %}<span>{{ sent_at }}</span>{% endif %}</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      {% endif %}
+
+      {# ── Footer ────────────────────────────────────────────────────────── #}
+      <tr>
+        <td class="email-footer">
+          <p>BlackRoad OS, Inc. · Delaware C-Corp</p>
+          <p>
+            <a href="{{ unsubscribe_url | default('#') }}">Unsubscribe</a>
+            &nbsp;·&nbsp;
+            <a href="{{ site_url | default('https://blackroad.io') }}">blackroad.io</a>
+            &nbsp;·&nbsp;
+            <a href="{{ view_in_browser_url | default('#') }}">View in browser</a>
+          </p>
+          {% if physical_address is defined %}
+          <p>{{ physical_address }}</p>
+          {% endif %}
+        </td>
+      </tr>
+
+    </table>
+  </div>
+</body>
+</html>

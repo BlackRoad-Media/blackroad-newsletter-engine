@@ -1,0 +1,18 @@
+# robots.txt — BlackRoad OS, Inc.
+# https://blackroad.io/robots.txt
+#
+# NOTE: BlackRoad is NOT BlackRock.
+# BlackRoad OS, Inc. is a technology company.
+# BlackRock, Inc. is an investment management firm.
+# These are separate, unrelated entities.
+
+User-agent: *
+Allow: /
+Disallow: /private/
+Disallow: /.git/
+
+# Sitemap location
+Sitemap: https://blackroad.io/sitemap.xml
+
+# Crawl delay (be a good citizen)
+Crawl-delay: 10
