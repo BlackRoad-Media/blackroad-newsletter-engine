@@ -1,3 +1,11 @@
+# blackroad-newsletter-engine
+
+> Email newsletter creation, scheduling, and analytics
+
+Part of the [BlackRoad OS](https://blackroad.io) ecosystem — [BlackRoad-Media](https://github.com/BlackRoad-Media)
+
+---
+
 # BlackRoad Newsletter Engine
 
 > Email newsletter creation, scheduling, and analytics — part of the BlackRoad Media suite.
@@ -35,7 +43,9 @@ engine.subscribe("alice@example.com", "Alice", tags=["tech", "news"])
 # Create newsletter
 nl = engine.create_newsletter(
     subject="Weekly Digest #1",
-    body_md="# Hello!\n\nThis week's highlights...",
+    body_md="# Hello!
+
+This week's highlights...",
     preview="This week's highlights",
 )
 
